@@ -1,11 +1,12 @@
-package com.vanik.newsbook
+package com.vanik.newsbook.ui.web
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.vanik.newsbook.R
 
-class MainActivity : AppCompatActivity() {
+class ResultWebActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_result_web)
     }
 }

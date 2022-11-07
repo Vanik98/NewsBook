@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">NewsBook</string>
+    <string name="insert_failed_massage">You can save only 5 news</string>
+    <string name="insert_success_massage">News saved successfully</string>
+    <string name="loading">Loading...</string>
 </resources>
