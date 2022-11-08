@@ -1,33 +1,36 @@
 package com.vanik.newsbook.module.repository
 
-import com.vanik.newsbook.module.net.NewsApiHelper
-import com.vanik.newsbook.module.net.RetrofitInstance
+import com.vanik.newsbook.module.net.NewsApiService
+import com.vanik.newsbook.module.room.dao.ResultDao
 import com.vanik.newsbook.proxy.net.News
 import com.vanik.newsbook.proxy.net.Result
+import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.flow
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 
 @ExperimentalSerializationApi
-class Repository {
-    private val apiHelper: NewsApiHelper = NewsApiHelper(RetrofitInstance.newsApiService)
-
-    suspend fun getResults(): List<Result>? {
-        val newsJson = apiHelper.getNews().body().toString()
+class Repository(
+    private val apiService: NewsApiService,
+    private val resultDao: ResultDao
+) {
+    fun getResults() = flow{
+        val newsJson = apiService.getNews().body().toString()
         val json = Json { ignoreUnknownKeys = true }
         val news: News = json.decodeFromString(newsJson)
-        return news.response?.results
+        emit(news.response?.results)
     }
 
-    suspend fun saveFavoriteNews(result: Result){
+    fun getFavoriteNews() =flow{ emit(resultDao.getAll())}
 
+
+    suspend fun saveFavoriteNews(result: Result) {
+        resultDao.insert(result)
     }
 
-    suspend fun deleteFavoriteNews(result: Result){
-
+    suspend fun deleteFavoriteNews(result: Result) {
+        resultDao.delete(result)
     }
 
-    suspend fun getFavoriteNews(){
-
-    }
 }

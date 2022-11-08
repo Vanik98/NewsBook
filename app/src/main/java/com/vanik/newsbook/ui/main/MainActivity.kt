@@ -10,14 +10,17 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.vanik.newsbook.R
 import com.vanik.newsbook.databinding.ActivityMainBinding
+import com.vanik.newsbook.proxy.model.ResultLocal
 import com.vanik.newsbook.proxy.net.Result
 import kotlinx.serialization.ExperimentalSerializationApi
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
+@ExperimentalSerializationApi
 class MainActivity : AppCompatActivity() {
-    private lateinit var viewModel: MainViewModel
+    private val viewModel: MainViewModel by viewModel()
     private lateinit var binding: ActivityMainBinding
     private lateinit var adapter: ResultAdapter
-    private var results = mutableListOf<Result>()
+    private var resultsLocal = arrayListOf<ResultLocal>()
     private lateinit var dialog: Dialog
 
 
@@ -32,9 +35,10 @@ class MainActivity : AppCompatActivity() {
     @SuppressLint("NotifyDataSetChanged")
     @OptIn(ExperimentalSerializationApi::class)
     private fun showNews(){
-        viewModel = ViewModelProvider(this)[MainViewModel::class.java]
-        viewModel.getNewsResults().observe(this, Observer {
-            results.addAll(it!!)
+        viewModel.getResults().observe(this, Observer {
+            for (i in it){
+                resultsLocal.add(ResultLocal(i,false))
+            }
             adapter.notifyDataSetChanged()
             dialog.dismiss()
         })
@@ -43,7 +47,7 @@ class MainActivity : AppCompatActivity() {
     private fun initAdapter() {
         val resultRecyclerView = binding.resultRecyclerview
         resultRecyclerView.layoutManager = LinearLayoutManager(this)
-        resultRecyclerView.adapter = ResultAdapter(results, this)
+        resultRecyclerView.adapter = ResultAdapter(resultsLocal, this)
         adapter = resultRecyclerView.adapter as ResultAdapter
     }
     private fun initAndShowDialog() {

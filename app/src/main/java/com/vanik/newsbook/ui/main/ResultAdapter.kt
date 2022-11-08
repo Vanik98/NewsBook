@@ -1,16 +1,18 @@
 package com.vanik.newsbook.ui.main
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.vanik.newsbook.databinding.ItemResultBinding
+import com.vanik.newsbook.proxy.model.ResultLocal
 import com.vanik.newsbook.proxy.net.Result
 
 
 class ResultAdapter(
-    private val results: List<Result>,
+    private val resultLocal: List<ResultLocal>,
     val context: Context,
 ) : RecyclerView.Adapter<ResultAdapter.ResultHolder>() {
 
@@ -25,17 +27,17 @@ class ResultAdapter(
     }
 
     override fun onBindViewHolder(holder: ResultHolder, position: Int) {
-        holder.bind(results[position])
+        holder.bind(resultLocal[position])
     }
 
-    override fun getItemCount() = results.size
+    override fun getItemCount() = resultLocal.size
 
     inner class ResultHolder(private val binding: ItemResultBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(result: Result) {
-            binding.result = result
-            result.fields?.thumbnail?.let { showResultImage(imageLink = it) }
+        fun bind(resultLocal: ResultLocal) {
+            binding.resultFavorite = resultLocal
+            resultLocal.result.fields?.thumbnail?.let { showResultImage(imageLink = it) }
         }
 
         private fun showResultImage(imageLink: String) {
@@ -43,6 +45,24 @@ class ResultAdapter(
                 .load(imageLink)
                 .into(binding.resultImage)
         }
-    }
+
+        @SuppressLint("NotifyDataSetChanged")
+        private fun saveOrDelete(result: ResultLocal){
+            when(result.isSave){
+                true->{
+                    result.isSave = false
+//                    deleteResultInterface.deleteResult(result)
+                }
+                false->{
+                    result.isSave = true
+//                    if(!insertResultInterface.insertResult(result)){
+//                        result.isSave = false
+//                        Collections.swap(results)
+//                        notifyDataSetChanged()
+                    }
+                }
+            }
+//            showFavoriteImage(result.isSave)
+        }
 
 }

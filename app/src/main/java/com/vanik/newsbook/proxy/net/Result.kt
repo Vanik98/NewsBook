@@ -4,7 +4,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @kotlinx.serialization.Serializable
-//@Entity
+@Entity
 data class Result(
     @PrimaryKey
     val id: String,
@@ -14,5 +14,5 @@ data class Result(
     val webTitle: String,
     val webUrl: String,
     val apiUrl: String,
-    val fields: Fields?=null
+    val fields: Fields?=null,
 )
