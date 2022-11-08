@@ -15,6 +15,8 @@ import com.vanik.newsbook.proxy.net.Result
 class ResultAdapter(
     private val resultLocal: List<ResultLocal>,
     val context: Context,
+    val saveResult: (resultLocal : ResultLocal) -> Unit,
+    val deleteResult:(resultLocal : ResultLocal) ->Unit
 ) : RecyclerView.Adapter<ResultAdapter.ResultHolder>() {
 
     private lateinit var binding: ItemResultBinding
@@ -51,16 +53,18 @@ class ResultAdapter(
         }
 
         @SuppressLint("NotifyDataSetChanged")
-        private fun saveOrDelete(result: ResultLocal) {
-            when (result.isSave) {
+        private fun saveOrDelete(resultLocal: ResultLocal) {
+            when (resultLocal.isSave) {
                 true -> {
-                    result.isSave = false
+                    resultLocal.isSave = false
+                    deleteResult.invoke(resultLocal)
                 }
                 false -> {
-                    result.isSave = true
+                    resultLocal.isSave = true
+                    saveResult.invoke(resultLocal)
                 }
             }
-            showFavoriteImage(result.isSave)
+            showFavoriteImage(resultLocal.isSave)
         }
 
         private fun showFavoriteImage(isSave : Boolean){
