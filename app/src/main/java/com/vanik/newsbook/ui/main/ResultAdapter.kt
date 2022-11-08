@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.vanik.newsbook.R
 import com.vanik.newsbook.databinding.ItemResultBinding
 import com.vanik.newsbook.proxy.model.ResultLocal
 import com.vanik.newsbook.proxy.net.Result
@@ -38,6 +39,9 @@ class ResultAdapter(
         fun bind(resultLocal: ResultLocal) {
             binding.resultFavorite = resultLocal
             resultLocal.result.fields?.thumbnail?.let { showResultImage(imageLink = it) }
+            binding.resultFavoriteIcon.setOnClickListener{
+                saveOrDelete(resultLocal)
+            }
         }
 
         private fun showResultImage(imageLink: String) {
@@ -47,22 +51,25 @@ class ResultAdapter(
         }
 
         @SuppressLint("NotifyDataSetChanged")
-        private fun saveOrDelete(result: ResultLocal){
-            when(result.isSave){
-                true->{
+        private fun saveOrDelete(result: ResultLocal) {
+            when (result.isSave) {
+                true -> {
                     result.isSave = false
-//                    deleteResultInterface.deleteResult(result)
                 }
-                false->{
+                false -> {
                     result.isSave = true
-//                    if(!insertResultInterface.insertResult(result)){
-//                        result.isSave = false
-//                        Collections.swap(results)
-//                        notifyDataSetChanged()
-                    }
                 }
             }
-//            showFavoriteImage(result.isSave)
+            showFavoriteImage(result.isSave)
         }
+
+        private fun showFavoriteImage(isSave : Boolean){
+            val imageId = when(isSave){
+                true-> R.drawable.save
+                false->R.drawable.saven
+            }
+            binding.resultFavoriteIcon.setImageResource(imageId)
+        }
+    }
 
 }
