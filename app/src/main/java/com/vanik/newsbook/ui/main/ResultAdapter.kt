@@ -15,6 +15,7 @@ import com.vanik.newsbook.proxy.net.Result
 class ResultAdapter(
     private val resultLocal: List<ResultLocal>,
     val context: Context,
+    val onClick: (newsUrl: String) -> Unit,
     val saveResult: (resultLocal : ResultLocal) -> Unit,
     val deleteResult:(resultLocal : ResultLocal) ->Unit
 ) : RecyclerView.Adapter<ResultAdapter.ResultHolder>() {
@@ -41,6 +42,7 @@ class ResultAdapter(
         fun bind(resultLocal: ResultLocal) {
             binding.resultFavorite = resultLocal
             resultLocal.result.fields?.thumbnail?.let { showResultImage(imageLink = it) }
+            binding.root.setOnClickListener { onClick.invoke(resultLocal.result.webUrl) }
             binding.resultFavoriteIcon.setOnClickListener{
                 saveOrDelete(resultLocal)
             }
