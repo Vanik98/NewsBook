@@ -1,5 +1,6 @@
 package com.vanik.newsbook.ui.base
 
+//noinspection SuspiciousImport
 import android.R
 import android.app.Dialog
 import android.os.Bundle
