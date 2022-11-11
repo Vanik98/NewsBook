@@ -1,4 +1,4 @@
-package com.vanik.newsbook.proxy.net
+package com.vanik.newsbook.data.proxy.net
 
 
 @kotlinx.serialization.Serializable

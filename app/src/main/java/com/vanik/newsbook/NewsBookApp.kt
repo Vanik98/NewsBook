@@ -1,7 +1,7 @@
 package com.vanik.newsbook
 
 import android.app.Application
-import com.vanik.newsbook.module.di.appModules
+import com.vanik.newsbook.data.module.di.appModules
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin

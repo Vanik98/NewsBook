@@ -1,14 +1,15 @@
 @file:OptIn(ExperimentalSerializationApi::class)
 
-package com.vanik.newsbook.module.di
+package com.vanik.newsbook.data.module.di
 
 import androidx.room.Room
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
-import com.vanik.newsbook.module.*
-import com.vanik.newsbook.module.net.NewsApiService
-import com.vanik.newsbook.module.repository.Repository
-import com.vanik.newsbook.module.room.AppDatabase
+import com.vanik.newsbook.data.module.net.NewsApiService
+import com.vanik.newsbook.data.module.repository.Repository
+import com.vanik.newsbook.data.module.room.AppDatabase
+import com.vanik.newsbook.domain.*
 import com.vanik.newsbook.ui.main.MainViewModel
+import com.vanik.newsbook.ui.web.ResultWebViewModel
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
@@ -18,7 +19,7 @@ import retrofit2.Retrofit
 
 val appModules by lazy {
     listOf(
-        mainViewModel,
+        viewModels,
         useCaseModule,
         repositoryModule,
         retrofitModule,
@@ -26,9 +27,12 @@ val appModules by lazy {
     )
 }
 
-private val mainViewModel = module {
+private val viewModels = module {
     viewModel {
         MainViewModel(get(), get(), get())
+    }
+    viewModel{
+        ResultWebViewModel()
     }
 }
 

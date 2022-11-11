@@ -8,8 +8,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.vanik.newsbook.R
 import com.vanik.newsbook.databinding.ItemResultBinding
-import com.vanik.newsbook.proxy.model.ResultLocal
-import com.vanik.newsbook.proxy.net.Result
+import com.vanik.newsbook.data.proxy.model.ResultLocal
+import com.vanik.newsbook.data.proxy.net.Result
 
 
 class ResultAdapter(
@@ -42,6 +42,7 @@ class ResultAdapter(
         fun bind(resultLocal: ResultLocal) {
             binding.resultFavorite = resultLocal
             resultLocal.result.fields?.thumbnail?.let { showResultImage(imageLink = it) }
+            showFavoriteImage(resultLocal.isSave)
             binding.root.setOnClickListener { onClick.invoke(resultLocal.result.webUrl) }
             binding.resultFavoriteIcon.setOnClickListener{
                 saveOrDelete(resultLocal)
@@ -58,12 +59,14 @@ class ResultAdapter(
         private fun saveOrDelete(resultLocal: ResultLocal) {
             when (resultLocal.isSave) {
                 true -> {
-                    resultLocal.isSave = false
                     deleteResult.invoke(resultLocal)
+                    resultLocal.isSave = false
+                    notifyDataSetChanged()
                 }
                 false -> {
                     resultLocal.isSave = true
                     saveResult.invoke(resultLocal)
+                    notifyDataSetChanged()
                 }
             }
             showFavoriteImage(resultLocal.isSave)

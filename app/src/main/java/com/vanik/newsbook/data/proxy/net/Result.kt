@@ -1,12 +1,10 @@
-package com.vanik.newsbook.proxy.net
+package com.vanik.newsbook.data.proxy.net
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @kotlinx.serialization.Serializable
-@Entity
 data class Result(
-    @PrimaryKey
     val id: String,
     val sectionId: String,
     val sectionName: String,

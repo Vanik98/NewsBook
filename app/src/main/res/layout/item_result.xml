@@ -5,7 +5,7 @@
     <data>
         <variable
             name="resultFavorite"
-            type="com.vanik.newsbook.proxy.model.ResultLocal" />
+            type="com.vanik.newsbook.data.proxy.model.ResultLocal" />
     </data>
     <FrameLayout
         android:layout_width="match_parent"

@@ -3,10 +3,10 @@ package com.vanik.newsbook.ui.main
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
-import com.vanik.newsbook.module.DeleteFavoriteResultUseCase
-import com.vanik.newsbook.module.GetAllResultsUseCase
-import com.vanik.newsbook.module.SaveFavoriteResultUseCase
-import com.vanik.newsbook.proxy.net.Result
+import com.vanik.newsbook.data.proxy.model.ResultLocal
+import com.vanik.newsbook.domain.DeleteFavoriteResultUseCase
+import com.vanik.newsbook.domain.GetAllResultsUseCase
+import com.vanik.newsbook.domain.SaveFavoriteResultUseCase
 import kotlinx.coroutines.launch
 import kotlinx.serialization.ExperimentalSerializationApi
 
@@ -19,9 +19,8 @@ class MainViewModel(
 
     fun getResults() = getAllResultsUseCase.execute().asLiveData()
 
-    fun saveResult(result: Result) = viewModelScope.launch { saveFavoriteResult.execute(result) }
+    fun saveResult(resultLocal: ResultLocal) = viewModelScope.launch { saveFavoriteResult.execute(resultLocal)}
 
-    fun deleteResult(result: Result) = viewModelScope.launch { deleteFavoriteResult.execute(result) }
-
+    fun deleteResult(resultLocal: ResultLocal) = viewModelScope.launch { deleteFavoriteResult.execute(resultLocal) }
 
 }
