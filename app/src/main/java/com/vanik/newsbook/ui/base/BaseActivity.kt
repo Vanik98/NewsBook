@@ -3,10 +3,9 @@ package com.vanik.newsbook.ui.base
 import android.R
 import android.app.Dialog
 import android.os.Bundle
-import android.os.PersistableBundle
 import androidx.appcompat.app.AppCompatActivity
 
-open abstract class BaseActivity : AppCompatActivity() {
+abstract class BaseActivity : AppCompatActivity() {
 
     private lateinit var dialog: Dialog
 
