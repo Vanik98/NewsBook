@@ -2,7 +2,6 @@
 
 package com.vanik.newsbook.domain
 
-import com.vanik.newsbook.domain.FilterLogic
 import com.vanik.newsbook.data.module.repository.Repository
 import com.vanik.newsbook.data.proxy.model.ResultLocal
 import kotlinx.coroutines.*
@@ -15,12 +14,22 @@ class GetAllResultsUseCase(
     private val getNetResults: GetNetResultUseCase,
     private val getFavoriteResult: GetFavoriteResultUseCase
 ) {
-    fun execute() = flow {
+    private var saveDbResult : List<ResultLocal>? = null
+    private var showResult = arrayListOf<ResultLocal>()
+    fun execute(page : Int) = flow {
         coroutineScope {
-            val netResults = async { getNetResults.execute() }
-            val dbResults = async { getFavoriteResult.execute() }
-            val filterResultLocal =  FilterLogic.filterResults(dbResults.await(), netResults.await())
-            emit(filterResultLocal)
+            val netResults = async { getNetResults.execute(page) }
+            if(page == 0){
+             var  dbResults =  async { getFavoriteResult.execute() }
+                val filterResultLocal =  FilterLogic.filterResults(dbResults.await(), netResults.await(),true)
+                saveDbResult = dbResults.await()
+                showResult.addAll(filterResultLocal)
+                emit(filterResultLocal)
+            }else{
+                val filterResultLocal =  FilterLogic.filterResults(saveDbResult, netResults.await(),false)
+                showResult.addAll(filterResultLocal)
+                emit(filterResultLocal)
+            }
         }
     }
 }
@@ -43,11 +52,9 @@ class GetAllResultsUseCase(
 //        }
 
 
-
-
 class GetNetResultUseCase(private val repository: Repository) {
-    suspend fun execute() = withContext(backgroundThread) {
-        repository.getNetResults()
+    suspend fun execute(page : Int) = withContext(backgroundThread) {
+        repository.getNetResults(page)
     }
 }
 

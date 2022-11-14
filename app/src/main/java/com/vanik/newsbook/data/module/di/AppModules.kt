@@ -17,6 +17,7 @@ import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 import retrofit2.Retrofit
 
+
 val appModules by lazy {
     listOf(
         viewModels,
@@ -31,7 +32,7 @@ private val viewModels = module {
     viewModel {
         MainViewModel(get(), get(), get())
     }
-    viewModel{
+    viewModel {
         ResultWebViewModel()
     }
 }

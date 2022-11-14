@@ -1,11 +1,13 @@
 package com.vanik.newsbook.ui.main
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.vanik.newsbook.data.proxy.model.ResultLocal
 import com.vanik.newsbook.domain.DeleteFavoriteResultUseCase
 import com.vanik.newsbook.domain.GetAllResultsUseCase
+import com.vanik.newsbook.domain.GetNetResultUseCase
 import com.vanik.newsbook.domain.SaveFavoriteResultUseCase
 import kotlinx.coroutines.launch
 import kotlinx.serialization.ExperimentalSerializationApi
@@ -17,7 +19,12 @@ class MainViewModel(
     private val deleteFavoriteResult: DeleteFavoriteResultUseCase,
 ) : ViewModel() {
 
-    fun getResults() = getAllResultsUseCase.execute().asLiveData()
+    private var pageCount = 0;
+
+    fun getResults(): LiveData<List<ResultLocal>> {
+        pageCount++
+        return getAllResultsUseCase.execute(pageCount).asLiveData()
+    }
 
     fun saveResult(resultLocal: ResultLocal) = viewModelScope.launch { saveFavoriteResult.execute(resultLocal)}
 

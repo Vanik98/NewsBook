@@ -22,11 +22,8 @@ class ResultWebActivity : BaseActivity() {
         showWebView(savedInstanceState)
     }
 
-    override fun setUpBinding() {
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_result_web)
-    }
-
     override fun setUpViews() {
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_result_web)
         initializeWebView()
     }
 

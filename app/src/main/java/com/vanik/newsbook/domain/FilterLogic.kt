@@ -6,32 +6,19 @@ import java.util.Collections
 
 object FilterLogic {
 
-    fun filterResults(dbResultsLocal: List<ResultLocal>?, netResults: List<Result>?): List<ResultLocal> {
-        if(dbResultsLocal!= null){
-            Collections.reverse(dbResultsLocal)
-        }
-        val onlyFavoriteEmpty = dbResultsLocal == null && netResults != null
-        val onlyNetEmpty = dbResultsLocal != null && netResults == null
-        val favoriteAndNetNotEmpty = dbResultsLocal != null && netResults != null
+    fun filterResults(dbResultsLocal: List<ResultLocal>?, netResults: List<Result>?,isFirstCall : Boolean): List<ResultLocal> {
+        if(dbResultsLocal!= null){ Collections.reverse(dbResultsLocal) }
         val filterResultsLocal = arrayListOf<ResultLocal>()
-        if (favoriteAndNetNotEmpty) {
-            filterResultsLocal.addAll(dbResultsLocal!!)
+        if (dbResultsLocal != null && netResults != null) {
+            if(isFirstCall) {
+                filterResultsLocal.addAll(dbResultsLocal)
+            }
             val favoriteResults = arrayListOf<Result>()
-            for(i in dbResultsLocal){
-                favoriteResults.add(i.result)
-            }
-            val netFilterResults = netFilter(favoriteResults, netResults!!)
-            for (i in netFilterResults){
-                filterResultsLocal.add(ResultLocal(0,i,false))
-            }
-
-        } else if (onlyFavoriteEmpty) {
-            for (i in netResults!!) {
-                filterResultsLocal.add(ResultLocal(0, i, false))
-            }
-        } else if (onlyNetEmpty) {
-            return dbResultsLocal!!
-        }
+            for(i in dbResultsLocal){ favoriteResults.add(i.result) }
+            val netFilterResults = netFilter(favoriteResults, netResults)
+            for (i in netFilterResults){ filterResultsLocal.add(ResultLocal(0,i,false)) }
+        } else if (netResults != null) { for (i in netResults) { filterResultsLocal.add(ResultLocal(0, i, false)) }
+        } else if (dbResultsLocal != null) { return dbResultsLocal }
         return filterResultsLocal
     }
 

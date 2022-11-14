@@ -16,8 +16,8 @@ class Repository(
     private val apiService: NewsApiService,
     private val resultDao: ResultDao
 ) {
-    suspend fun getNetResults(): List<Result>? {
-        val newsJson = apiService.getNews().body().toString()
+    suspend fun getNetResults(page : Int): List<Result>? {
+        val newsJson = apiService.getNews(page = page).body().toString()
         val json = Json { ignoreUnknownKeys = true }
         val news: News = json.decodeFromString(newsJson)
         return news.response?.results

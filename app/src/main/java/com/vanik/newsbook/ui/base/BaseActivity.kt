@@ -1,8 +1,12 @@
 package com.vanik.newsbook.ui.base
 
 //noinspection SuspiciousImport
+
 import android.R
 import android.app.Dialog
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkInfo
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 
@@ -13,11 +17,9 @@ abstract class BaseActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setUpBaseViews()
-        setUpBinding()
         setUpViews()
     }
 
-    abstract fun setUpBinding()
     abstract fun setUpViews()
     private fun setUpBaseViews() {
         initializeDialog()
@@ -35,5 +37,38 @@ abstract class BaseActivity : AppCompatActivity() {
     fun closeDialog() {
         dialog.dismiss()
     }
+
+
+    fun isInternetAvailable(): Boolean {
+        var isConnected: Boolean = false // Initial Value
+        val connectivityManager = this.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val activeNetwork: NetworkInfo? = connectivityManager.activeNetworkInfo
+        if (activeNetwork != null && activeNetwork.isConnected)
+            isConnected = true
+        return isConnected
+    }
+
+//    var onlineInterceptor = Interceptor { chain ->
+//        val response = chain.proceed(chain.request())
+//        val maxAge = 60 // read from cache for 60 seconds even if there is internet connection
+//        response.newBuilder()
+//            .header("Cache-Control", "public, max-age=$maxAge")
+//            .removeHeader("Pragma")
+//            .build()
+//    }
+//
+//
+//    var offlineInterceptor = Interceptor { chain ->
+//        var request: Request = chain.request()
+//        if (!isInternetAvailable(this)) {
+//            val maxStale = 60 * 60 * 24 * 30 // Offline cache available for 30 days
+//            request = request.newBuilder()
+//                .header("Cache-Control", "public, only-if-cached, max-stale=$maxStale")
+//                .removeHeader("Pragma")
+//                .build()
+//        }
+//        chain.proceed(request)
+//    }
+//
 
 }

@@ -1,25 +1,20 @@
 package com.vanik.newsbook.ui.main
 
 import android.annotation.SuppressLint
-import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.vanik.newsbook.R
-import com.vanik.newsbook.databinding.ActivityMainBinding
 import com.vanik.newsbook.data.proxy.model.ResultLocal
-import com.vanik.newsbook.data.proxy.net.Result
+import com.vanik.newsbook.databinding.ActivityMainBinding
 import com.vanik.newsbook.ui.base.BaseActivity
 import com.vanik.newsbook.ui.web.ResultWebActivity
 import kotlinx.serialization.ExperimentalSerializationApi
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
-import okhttp3.internal.assertThreadHoldsLock
 import org.koin.androidx.viewmodel.ext.android.viewModel
+
 
 @ExperimentalSerializationApi
 class MainActivity : BaseActivity() {
@@ -30,21 +25,18 @@ class MainActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        showDialog()
         showNews()
     }
 
-    override fun setUpBinding() {
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
-    }
-
     override fun setUpViews() {
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         initializeAdapter()
     }
 
     @SuppressLint("NotifyDataSetChanged")
     @OptIn(ExperimentalSerializationApi::class)
     private fun showNews() {
-        showDialog()
         viewModel.getResults().observe(this, Observer {
             resultsLocal.addAll(it)
             adapter.notifyDataSetChanged()
@@ -54,7 +46,8 @@ class MainActivity : BaseActivity() {
 
     private fun initializeAdapter() {
         val resultRecyclerView = binding.resultRecyclerview
-        resultRecyclerView.layoutManager = LinearLayoutManager(this)
+        val layoutManager = LinearLayoutManager(this)
+        resultRecyclerView.layoutManager = layoutManager
         resultRecyclerView.adapter = ResultAdapter(
             resultsLocal,
             this,
@@ -73,6 +66,42 @@ class MainActivity : BaseActivity() {
             }
         )
         adapter = resultRecyclerView.adapter as ResultAdapter
+        scrollRecyclerView(resultRecyclerView,layoutManager)
+    }
+
+    private fun scrollRecyclerView(recyclerView: RecyclerView,layoutManager:LinearLayoutManager) {
+        var loading = false
+        recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+                when (newState) {
+                    RecyclerView.SCROLL_STATE_IDLE -> loading = false
+                    RecyclerView.SCROLL_STATE_DRAGGING -> loading = true
+                }
+            }
+
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                val pastVisibleItems: Int
+                val visibleItemCount: Int
+                val totalItemCount: Int
+                if (isInternetAvailable()) {
+                    if (dy > 0) {
+                        visibleItemCount = layoutManager.childCount
+                        totalItemCount = layoutManager.itemCount
+                        pastVisibleItems = layoutManager.findFirstVisibleItemPosition()
+                        if (loading) {
+                            if (visibleItemCount + pastVisibleItems >= totalItemCount) {
+                                loading = false
+//                                startDialog = false
+//                                getRequestResult(true)
+//                                startDialog = true
+                                showNews()
+                            }
+                        }
+                    }
+                }
+            }
+        })
     }
 
 
