@@ -22,7 +22,6 @@ class MainViewModel(
     private var pageCount = 0
 
     fun getResults(): LiveData<List<ResultLocal>> {
-        Log.i("vanikTest", "MainViewModel->$pageCount")
         pageCount++
         return getAllResultsUseCase.execute(pageCount).asLiveData()
     }
