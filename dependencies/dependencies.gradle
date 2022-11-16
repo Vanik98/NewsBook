@@ -25,9 +25,9 @@ ext {
             "architectureComponentsVersion"        : '2.5.1',
             //Room
             "roomVersion"                          : '2.4.3',
-            //glide
+            //Glide
             "glideVersion"                         : '4.13.2',
-            //retrofit
+            //Retrofit
             "retrofitVersion"                      : '2.9.0',
             "okHttpVersion"                        : '5.0.0-alpha.2'
     ]
