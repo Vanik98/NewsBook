@@ -21,7 +21,7 @@ import retrofit2.Retrofit
 
 val appModules by lazy {
     listOf(
-        viewModels,
+        viewModelsModule,
         useCaseModule,
         repositoryModule,
         retrofitModule,
@@ -29,7 +29,7 @@ val appModules by lazy {
     )
 }
 
-private val viewModels = module {
+private val viewModelsModule = module {
     viewModel {
         MainViewModel(get(), get(), get())
     }
