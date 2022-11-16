@@ -1,0 +1,80 @@
+ext {
+    versionOfCompileSdk = 32
+    versionOfMinSdk = 21
+    versionOfTargetSdk = 32
+    versionOfCode = 1
+    versionOfName = '1.0'
+    versionOfBuildTools = '30.0.2'
+
+    versions = [
+            //Kotlin
+            "coreVersion"                          : '1.7.0',
+            //UI
+            "appCompatVersion"                     : '1.5.1',
+            "materialVersion"                      : '1.7.0',
+            "constraintLayoutVersion"              : '2.1.4',
+            //Koin
+            "koinVersion"                          : '3.2.2',
+            "koinAndroidVersion"                   : '3.3.0',
+            //Coroutine
+            "coroutinesVersion"                    : '1.6.1',
+            //Serialization
+            "serializationVersion"                 : '1.2.1',
+            "retrofitSerializationConverterVersion": '0.8.0',
+            //ArchitectureComponents
+            "architectureComponentsVersion"        : '2.5.1',
+            //Room
+            "roomVersion"                          : '2.4.3',
+            //glide
+            "glideVersion"                         : '4.13.2',
+            //retrofit
+            "retrofitVersion"                      : '2.9.0',
+            "okHttpVersion"                        : '5.0.0-alpha.2'
+    ]
+
+    kotlinDependencies = [
+            coreKtx: "androidx.core:core-ktx:${versions.coreVersion}",
+    ]
+
+    uiDependencies = [
+            appcompat       : "androidx.appcompat:appcompat:${versions.appCompatVersion}",
+            material        : "com.google.android.material:material:${versions.materialVersion}",
+            constraintLayout: "androidx.constraintlayout:constraintlayout:${versions.constraintLayoutVersion}"
+    ]
+
+    koinDependencies = [
+            koinCore   : "io.insert-koin:koin-core:${versions.koinVersion}",
+            koinAndroid: "io.insert-koin:koin-android:${versions.koinAndroidVersion}",
+            koinTest   : "io.insert-koin:koin-test:${versions.koinVersion}"
+    ]
+
+    kotlinxSerializationDependencie = [
+            serializationJson             : "org.jetbrains.kotlinx:kotlinx-serialization-json:${versions.serializationVersion}",
+            retrofitSerializationConverter: "com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:${versions.retrofitSerializationConverterVersion}"
+    ]
+
+    coroutinesDependencies = [
+            coroutines: "org.jetbrains.kotlinx:kotlinx-coroutines-core:${versions.coroutinesVersion}"
+    ]
+
+    architectureComponentsDependencies = [
+            liveData : "androidx.lifecycle:lifecycle-livedata-ktx:${versions.architectureComponentsVersion}",
+            viewModel: "androidx.lifecycle:lifecycle-viewmodel-ktx:${versions.architectureComponentsVersion}"
+    ]
+
+    roomDependencies = [
+            room        : "androidx.room:room-ktx:${versions.roomVersion}",
+            roomCompiler: "androidx.room:room-compiler:${versions.roomVersion}"
+    ]
+
+    glideDependencies = [
+            glide        : "com.github.bumptech.glide:glide:${versions.glideVersion}",
+            glideCompiler: "com.github.bumptech.glide:compiler:${versions.glideVersion}"
+    ]
+
+    retrofitDependencies = [
+            retrofit: "com.squareup.retrofit2:retrofit:${versions.retrofitVersion}",
+            okHttp  : "com.squareup.okhttp3:okhttp:${versions.okHttpVersion}"
+    ]
+
+}
