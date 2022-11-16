@@ -1,4 +1,4 @@
-package com.vanik.newsbook.ui.base
+package com.vanik.newsbook.presentation.ui.base
 
 //noinspection SuspiciousImport
 
@@ -51,5 +51,39 @@ abstract class BaseActivity : AppCompatActivity() {
             isConnected = true
         return isConnected
     }
+
+//    var onlineInterceptor = Interceptor { chain ->
+//        val response = chain.proceed(chain.request())
+//        val maxAge = 60 // read from cache for 60 seconds even if there is internet connection
+//        response.newBuilder()
+//            .header("Cache-Control", "public, max-age=$maxAge")
+//            .removeHeader("Pragma")
+//            .build()
+//    }
+//
+//
+//    var offlineInterceptor = Interceptor { chain ->
+//        var request: Request = chain.request()
+//        if (!isInternetAvailable(this)) {
+//            val maxStale = 60 * 60 * 24 * 30 // Offline cache available for 30 days
+//            request = request.newBuilder()
+//                .header("Cache-Control", "public, only-if-cached, max-stale=$maxStale")
+//                .removeHeader("Pragma")
+//                .build()
+//        }
+//        chain.proceed(request)
+//    }
+//
+//    fun x() {
+//        val cacheSize = (10 * 1024 * 1024).toLong() // 10 MB
+//        val cache = Cache(this.cacheDir, cacheSize)
+//        val okHttpClient: OkHttpClient =
+//            OkHttpClient.Builder()
+//                .addInterceptor(offlineInterceptor)
+//                .addNetworkInterceptor(onlineInterceptor)
+//                .cache(cache)
+//                .build()
+//    }
+//
 
 }

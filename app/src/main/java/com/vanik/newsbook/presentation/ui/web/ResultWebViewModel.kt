@@ -1,4 +1,4 @@
-package com.vanik.newsbook.ui.web
+package com.vanik.newsbook.presentation.ui.web
 
 import androidx.lifecycle.ViewModel
 

@@ -1,4 +1,4 @@
-package com.vanik.newsbook.ui.main
+package com.vanik.newsbook.presentation.ui.main
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel

@@ -1,4 +1,4 @@
-package com.vanik.newsbook.ui.web
+package com.vanik.newsbook.presentation.ui.web
 
 import android.annotation.SuppressLint
 import android.graphics.Bitmap
@@ -9,7 +9,7 @@ import android.webkit.WebViewClient
 import androidx.databinding.DataBindingUtil
 import com.vanik.newsbook.R
 import com.vanik.newsbook.databinding.ActivityResultWebBinding
-import com.vanik.newsbook.ui.base.BaseActivity
+import com.vanik.newsbook.presentation.ui.base.BaseActivity
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class ResultWebActivity : BaseActivity() {

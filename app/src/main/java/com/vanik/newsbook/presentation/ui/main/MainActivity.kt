@@ -1,4 +1,4 @@
-package com.vanik.newsbook.ui.main
+package com.vanik.newsbook.presentation.ui.main
 
 import android.annotation.SuppressLint
 import android.content.Intent
@@ -10,8 +10,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.vanik.newsbook.R
 import com.vanik.newsbook.data.proxy.model.ResultLocal
 import com.vanik.newsbook.databinding.ActivityMainBinding
-import com.vanik.newsbook.ui.base.BaseActivity
-import com.vanik.newsbook.ui.web.ResultWebActivity
+import com.vanik.newsbook.presentation.ui.base.BaseActivity
+import com.vanik.newsbook.presentation.ui.web.ResultWebActivity
 import kotlinx.serialization.ExperimentalSerializationApi
 import org.koin.androidx.viewmodel.ext.android.viewModel
 

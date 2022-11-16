@@ -8,15 +8,18 @@ import com.vanik.newsbook.data.module.net.NewsApiService
 import com.vanik.newsbook.data.module.repository.Repository
 import com.vanik.newsbook.data.module.room.AppDatabase
 import com.vanik.newsbook.domain.*
-import com.vanik.newsbook.ui.main.MainViewModel
-import com.vanik.newsbook.ui.web.ResultWebViewModel
+import com.vanik.newsbook.presentation.ui.main.MainViewModel
+import com.vanik.newsbook.presentation.ui.web.ResultWebViewModel
+import com.vanik.newsbook.presentation.utils.Constants
 import kotlinx.coroutines.Dispatchers
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.OkHttpClient
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 import retrofit2.Retrofit
+import java.util.concurrent.TimeUnit
 
 
 val appModules by lazy {
@@ -51,21 +54,23 @@ private val repositoryModule = module {
 }
 
 private val roomModule = module {
-    single {
-        Room.databaseBuilder(
-            get(),
-            AppDatabase::class.java,
-            "news_database"
-        ).build()
-    }
+    single { Room.databaseBuilder(get(), AppDatabase::class.java, Constants.NEWS_DATABASE_NAME).build() }
     single { get<AppDatabase>().ResultDao() }
 }
 
 private val retrofitModule = module {
     single {
+//        val client: OkHttpClient = OkHttpClient.Builder()
+//            .connectTimeout(Constants.CONNECTION_TIMEOUT, TimeUnit.SECONDS)
+//            .readTimeout(Constants.READ_TIMEOUT, TimeUnit.SECONDS)
+//            .writeTimeout(Constants.WRITE_TIMEOUT, TimeUnit.SECONDS)
+//            .retryOnConnectionFailure(false)
+//            .build()
+
         Retrofit.Builder()
-            .baseUrl("https://content.guardianapis.com/")
-            .addConverterFactory(Json.asConverterFactory("application/json".toMediaType()))
+            .baseUrl(Constants.BASE_URL)
+//            .client(client)
+            .addConverterFactory(Json.asConverterFactory(Constants.CONVERT_FACTORY.toMediaType()))
             .build()
             .create(NewsApiService::class.java)
     }
