@@ -8,8 +8,6 @@ import com.vanik.newsbook.data.proxy.model.ResultLocal
 import com.vanik.newsbook.domain.DeleteFavoriteResultUseCase
 import com.vanik.newsbook.domain.GetAllResultsUseCase
 import com.vanik.newsbook.domain.SaveFavoriteResultUseCase
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
 import kotlinx.serialization.ExperimentalSerializationApi
 
@@ -23,12 +21,10 @@ class MainViewModel(
 
     fun getResults(): LiveData<List<ResultLocal>> {
         pageCount++
-        return getAllResultsUseCase.execute(pageCount).flowOn(Dispatchers.IO).asLiveData()
+        return getAllResultsUseCase.execute(pageCount).asLiveData()
     }
 
-    fun saveResult(resultLocal: ResultLocal) =
-        viewModelScope.launch(context = Dispatchers.IO) { saveFavoriteResult.execute(resultLocal) }
+    fun saveResult(resultLocal: ResultLocal) = viewModelScope.launch { saveFavoriteResult.execute(resultLocal) }
 
-    fun deleteResult(resultLocal: ResultLocal) =
-        viewModelScope.launch(context = Dispatchers.IO) { deleteFavoriteResult.execute(resultLocal) }
+    fun deleteResult(resultLocal: ResultLocal) = viewModelScope.launch { deleteFavoriteResult.execute(resultLocal) }
 }

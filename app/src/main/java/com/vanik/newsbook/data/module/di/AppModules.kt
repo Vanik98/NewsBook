@@ -10,6 +10,7 @@ import com.vanik.newsbook.data.module.room.AppDatabase
 import com.vanik.newsbook.domain.*
 import com.vanik.newsbook.ui.main.MainViewModel
 import com.vanik.newsbook.ui.web.ResultWebViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
@@ -46,7 +47,7 @@ private val useCaseModule = module {
 }
 
 private val repositoryModule = module {
-    single { Repository(get(), get()) }
+    single { Repository(Dispatchers.IO,get(), get()) }
 }
 
 private val roomModule = module {
