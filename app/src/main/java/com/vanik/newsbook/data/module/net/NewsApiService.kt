@@ -20,7 +20,7 @@ interface NewsApiService {
     }
 
     @GET(SEARCH)
-    suspend fun getNews(
+   suspend fun getNews(
         @Query(API_KEY) apiKey: String = API_KEY_VALUE,
         @Query(PAGE_SIZE) page_size: Int = PAGE_SIZE_VALUE,
         @Query(PAGE) page: Int = PAGE_VALUE,

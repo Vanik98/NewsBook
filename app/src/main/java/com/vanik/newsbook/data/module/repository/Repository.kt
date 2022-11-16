@@ -5,6 +5,7 @@ import com.vanik.newsbook.data.module.room.dao.ResultDao
 import com.vanik.newsbook.data.proxy.model.ResultLocal
 import com.vanik.newsbook.data.proxy.net.News
 import com.vanik.newsbook.data.proxy.net.Result
+import kotlinx.coroutines.flow.flow
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
@@ -14,15 +15,14 @@ class Repository(
     private val apiService: NewsApiService,
     private val resultDao: ResultDao
 ) {
-    suspend fun getNetResults(page: Int): List<Result>? {
+    fun getNetResults(page: Int) = flow {
         val newsJson = apiService.getNews(page = page).body().toString()
         val json = Json { ignoreUnknownKeys = true }
         val news: News = json.decodeFromString(newsJson)
-        return news.response?.results
+        emit(news.response?.results)
     }
 
-    suspend fun getDbResultsLocal() = resultDao.getAll()
-
+    fun getDbResultsLocal() = flow { emit(resultDao.getAll()) }
 
     suspend fun saveFavoriteResultLocal(resultLocal: ResultLocal) {
         resultDao.insert(resultLocal)
