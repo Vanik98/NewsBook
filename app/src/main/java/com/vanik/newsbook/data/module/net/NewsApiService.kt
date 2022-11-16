@@ -11,7 +11,7 @@ interface NewsApiService {
         private const val API_KEY = "api-key"
         private const val API_KEY_VALUE = "e4ee9fd2-a708-473d-9eb9-63a33a818d5f"
         private const val PAGE_SIZE = "page-size"
-        private const val PAGE_SIZE_VALUE = 5
+        private const val PAGE_SIZE_VALUE = 3
         private const val PAGE = "page"
         private const val PAGE_VALUE = 1
         private const val SHOW_FIELDS = "show-fields"

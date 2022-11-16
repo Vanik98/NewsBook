@@ -1,5 +1,6 @@
 package com.vanik.newsbook.ui.main
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
@@ -19,11 +20,12 @@ class MainViewModel(
     private val deleteFavoriteResult: DeleteFavoriteResultUseCase,
 ) : ViewModel() {
 
-    private var pageCount = 0;
+    private var pageCount = 0
 
     fun getResults(): LiveData<List<ResultLocal>> {
+        Log.i("vanikTest","MainViewModel->$pageCount")
         pageCount++
-        return getAllResultsUseCase.execute(pageCount).asLiveData()
+        return  getAllResultsUseCase.execute(pageCount).asLiveData()
     }
 
     fun saveResult(resultLocal: ResultLocal) = viewModelScope.launch { saveFavoriteResult.execute(resultLocal)}

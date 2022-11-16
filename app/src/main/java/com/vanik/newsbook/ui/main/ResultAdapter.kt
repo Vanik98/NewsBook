@@ -7,34 +7,55 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.vanik.newsbook.R
-import com.vanik.newsbook.databinding.ItemResultBinding
 import com.vanik.newsbook.data.proxy.model.ResultLocal
-import com.vanik.newsbook.data.proxy.net.Result
+import com.vanik.newsbook.databinding.ItemDialogBinding
+import com.vanik.newsbook.databinding.ItemResultBinding
 
 
 class ResultAdapter(
     private val resultLocal: List<ResultLocal>,
     val context: Context,
     val onClick: (newsUrl: String) -> Unit,
-    val saveResult: (resultLocal : ResultLocal) -> Unit,
-    val deleteResult:(resultLocal : ResultLocal) ->Unit
-) : RecyclerView.Adapter<ResultAdapter.ResultHolder>() {
+    val saveResult: (resultLocal: ResultLocal) -> Unit,
+    val deleteResult: (resultLocal: ResultLocal) -> Unit
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private lateinit var binding: ItemResultBinding
+    private lateinit var bindingDialog: ItemDialogBinding
+    private val VIEW_TYPE_ITEM = 0
+    private val VIEW_TYPE_LOADING = 1
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ResultHolder {
-        binding = ItemResultBinding.inflate(
-            LayoutInflater.from(parent.context),
-            parent, false
-        )
-        return ResultHolder(binding)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        val inflater = LayoutInflater.from(parent.context)
+        return if (viewType == VIEW_TYPE_ITEM) {
+            binding = ItemResultBinding.inflate(inflater, parent, false)
+            ResultHolder(binding)
+        } else {
+            bindingDialog = ItemDialogBinding.inflate(inflater, parent, false)
+            return DialogHolder(bindingDialog)
+        }
     }
 
-    override fun onBindViewHolder(holder: ResultHolder, position: Int) {
-        holder.bind(resultLocal[position])
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        if (holder.itemViewType == VIEW_TYPE_ITEM) {
+            holder as ResultHolder
+            holder.bind(resultLocal[position])
+        }
     }
 
-    override fun getItemCount() = resultLocal.size
+    override fun getItemCount(): Int {
+        return if (resultLocal.isNotEmpty())
+            resultLocal.size + 1;
+        else resultLocal.size
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        return if (position == resultLocal.size) VIEW_TYPE_LOADING else VIEW_TYPE_ITEM
+    }
+
+    inner class DialogHolder(private val binding: ItemDialogBinding) :
+        RecyclerView.ViewHolder(binding.root) {}
+
 
     inner class ResultHolder(private val binding: ItemResultBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -44,7 +65,7 @@ class ResultAdapter(
             resultLocal.result.fields?.thumbnail?.let { showResultImage(imageLink = it) }
             showFavoriteImage(resultLocal.isSave)
             binding.root.setOnClickListener { onClick.invoke(resultLocal.result.webUrl) }
-            binding.resultFavoriteIcon.setOnClickListener{
+            binding.resultFavoriteIcon.setOnClickListener {
                 saveOrDelete(resultLocal)
             }
         }
@@ -72,10 +93,10 @@ class ResultAdapter(
             showFavoriteImage(resultLocal.isSave)
         }
 
-        private fun showFavoriteImage(isSave : Boolean){
-            val imageId = when(isSave){
-                true-> R.drawable.save
-                false->R.drawable.saven
+        private fun showFavoriteImage(isSave: Boolean) {
+            val imageId = when (isSave) {
+                true -> R.drawable.save
+                false -> R.drawable.saven
             }
             binding.resultFavoriteIcon.setImageResource(imageId)
         }

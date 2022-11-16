@@ -2,6 +2,7 @@
 
 package com.vanik.newsbook.domain
 
+import android.util.Log
 import com.vanik.newsbook.data.module.repository.Repository
 import com.vanik.newsbook.data.proxy.model.ResultLocal
 import kotlinx.coroutines.*
@@ -19,10 +20,12 @@ class GetAllResultsUseCase(
     fun execute(page : Int) = flow {
         coroutineScope {
             val netResults = async { getNetResults.execute(page) }
-            if(page == 0){
+            if(page == 1){
+                Log.i("vanikTest","ResultUseCase-> it is true $page")
              var  dbResults =  async { getFavoriteResult.execute() }
                 val filterResultLocal =  FilterLogic.filterResults(dbResults.await(), netResults.await(),true)
                 saveDbResult = dbResults.await()
+                Log.i("vanikTest","data= $saveDbResult")
                 showResult.addAll(filterResultLocal)
                 emit(filterResultLocal)
             }else{
