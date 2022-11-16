@@ -8,8 +8,6 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 import kotlinx.serialization.ExperimentalSerializationApi
 
-private val backgroundThread = Dispatchers.IO
-
 class GetAllResultsUseCase(
     private val getNetResults: GetNetResultUseCase,
     private val getFavoriteResult: GetFavoriteResultUseCase
@@ -19,35 +17,31 @@ class GetAllResultsUseCase(
 
     fun execute(page: Int) =
         combine(getNetResults.execute(page), getFavoriteResult.execute()) { netResults, dBResults ->
+            val filterResultLocal: List<ResultLocal>
             if (page == 1) {
-                val filterResultLocal = FilterLogic.filterResults(dBResults, netResults, true)
+                filterResultLocal = FilterLogic.filterResults(dBResults, netResults, true)
                 saveDbResult = dBResults
-                showResult.addAll(filterResultLocal)
-                filterResultLocal
             } else {
-                val filterResultLocal = FilterLogic.filterResults(saveDbResult, netResults, false)
+                filterResultLocal = FilterLogic.filterResults(saveDbResult, netResults, false)
                 showResult.addAll(filterResultLocal)
-                filterResultLocal
             }
+            showResult.addAll(filterResultLocal)
+            filterResultLocal
         }
 }
 
 class GetNetResultUseCase(private val repository: Repository) {
-    fun execute(page: Int) = repository.getNetResults(page).flowOn(backgroundThread)
+    fun execute(page: Int) = repository.getNetResults(page)
 }
 
 class GetFavoriteResultUseCase(private val repository: Repository) {
-    fun execute() = repository.getDbResultsLocal().flowOn(backgroundThread)
+    fun execute() = repository.getDbResultsLocal()
 }
 
 class DeleteFavoriteResultUseCase(private val repository: Repository) {
-    suspend fun execute(resultLocal: ResultLocal) = withContext(backgroundThread) {
-        repository.deleteFavoriteResulLocal(resultLocal)
-    }
+    suspend fun execute(resultLocal: ResultLocal) = repository.deleteFavoriteResulLocal(resultLocal)
 }
 
 class SaveFavoriteResultUseCase(private val repository: Repository) {
-    suspend fun execute(resultLocal: ResultLocal) = withContext(backgroundThread) {
-        repository.saveFavoriteResultLocal(resultLocal)
-    }
+    suspend fun execute(resultLocal: ResultLocal) = repository.saveFavoriteResultLocal(resultLocal)
 }

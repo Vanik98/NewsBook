@@ -15,15 +15,14 @@ class Repository(
     private val apiService: NewsApiService,
     private val resultDao: ResultDao
 ) {
-    fun getNetResults(page: Int) = flow{
+    fun getNetResults(page: Int) = flow {
         val newsJson = apiService.getNews(page = page).body().toString()
         val json = Json { ignoreUnknownKeys = true }
         val news: News = json.decodeFromString(newsJson)
-        emit( news.response?.results)
+        emit(news.response?.results)
     }
 
-     fun getDbResultsLocal() = flow {emit(resultDao.getAll())}
-
+    fun getDbResultsLocal() = flow { emit(resultDao.getAll()) }
 
     suspend fun saveFavoriteResultLocal(resultLocal: ResultLocal) {
         resultDao.insert(resultLocal)
