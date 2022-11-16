@@ -5,7 +5,6 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.vanik.newsbook.data.module.room.dao.ResultDao
 import com.vanik.newsbook.data.proxy.model.ResultLocal
-import com.vanik.newsbook.data.proxy.net.Result
 import kotlinx.serialization.ExperimentalSerializationApi
 
 @ExperimentalSerializationApi

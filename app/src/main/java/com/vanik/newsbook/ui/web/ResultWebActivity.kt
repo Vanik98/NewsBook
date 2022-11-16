@@ -13,7 +13,7 @@ import com.vanik.newsbook.ui.base.BaseActivity
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class ResultWebActivity : BaseActivity() {
-    private val viewModel : ResultWebViewModel by viewModel()
+    private val viewModel: ResultWebViewModel by viewModel()
     private lateinit var binding: ActivityResultWebBinding
     private lateinit var webView: WebView
 

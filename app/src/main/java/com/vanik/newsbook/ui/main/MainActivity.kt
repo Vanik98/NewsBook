@@ -56,7 +56,7 @@ class MainActivity : BaseActivity() {
                 viewModel.saveResult(it)
                 val element = it
                 resultsLocal.remove(it)
-                resultsLocal.add(0,element)
+                resultsLocal.add(0, element)
             },
             {
                 viewModel.deleteResult(it)
@@ -66,10 +66,10 @@ class MainActivity : BaseActivity() {
             }
         )
         adapter = resultRecyclerView.adapter as ResultAdapter
-        scrollRecyclerView(resultRecyclerView,layoutManager)
+        scrollRecyclerView(resultRecyclerView, layoutManager)
     }
 
-    private fun scrollRecyclerView(recyclerView: RecyclerView,layoutManager:LinearLayoutManager) {
+    private fun scrollRecyclerView(recyclerView: RecyclerView, layoutManager: LinearLayoutManager) {
         var loading = false
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
@@ -92,9 +92,6 @@ class MainActivity : BaseActivity() {
                         if (loading) {
                             if (visibleItemCount + pastVisibleItems >= totalItemCount) {
                                 loading = false
-//                                startDialog = false
-//                                getRequestResult(true)
-//                                startDialog = true
                                 showNews()
                             }
                         }

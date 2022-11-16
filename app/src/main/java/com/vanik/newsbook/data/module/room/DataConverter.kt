@@ -9,14 +9,14 @@ import kotlinx.serialization.json.Json
 
 @ExperimentalSerializationApi
 class DataConverter {
-        @TypeConverter
-        fun fromFields(str: String): Fields? {
-            return Json.decodeFromString(str)
-        }
+    @TypeConverter
+    fun fromFields(str: String): Fields? {
+        return Json.decodeFromString(str)
+    }
 
-        @TypeConverter
-        fun stringFields(fields: Fields): String {
-            return Json.encodeToString(fields)
-        }
+    @TypeConverter
+    fun stringFields(fields: Fields): String {
+        return Json.encodeToString(fields)
+    }
 
 }

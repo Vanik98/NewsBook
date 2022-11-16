@@ -2,7 +2,7 @@ package com.vanik.newsbook.domain
 
 import com.vanik.newsbook.data.proxy.model.ResultLocal
 import com.vanik.newsbook.data.proxy.net.Result
-import java.util.Collections
+import java.util.*
 
 object FilterLogic {
 

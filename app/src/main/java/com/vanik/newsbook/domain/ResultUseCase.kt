@@ -15,21 +15,23 @@ class GetAllResultsUseCase(
     private val getNetResults: GetNetResultUseCase,
     private val getFavoriteResult: GetFavoriteResultUseCase
 ) {
-    private var saveDbResult : List<ResultLocal>? = null
+    private var saveDbResult: List<ResultLocal>? = null
     private var showResult = arrayListOf<ResultLocal>()
-    fun execute(page : Int) = flow {
+    fun execute(page: Int) = flow {
         coroutineScope {
             val netResults = async { getNetResults.execute(page) }
-            if(page == 1){
-                Log.i("vanikTest","ResultUseCase-> it is true $page")
-             var  dbResults =  async { getFavoriteResult.execute() }
-                val filterResultLocal =  FilterLogic.filterResults(dbResults.await(), netResults.await(),true)
+            if (page == 1) {
+                Log.i("vanikTest", "ResultUseCase-> it is true $page")
+                var dbResults = async { getFavoriteResult.execute() }
+                val filterResultLocal =
+                    FilterLogic.filterResults(dbResults.await(), netResults.await(), true)
                 saveDbResult = dbResults.await()
-                Log.i("vanikTest","data= $saveDbResult")
+                Log.i("vanikTest", "data= $saveDbResult")
                 showResult.addAll(filterResultLocal)
                 emit(filterResultLocal)
-            }else{
-                val filterResultLocal =  FilterLogic.filterResults(saveDbResult, netResults.await(),false)
+            } else {
+                val filterResultLocal =
+                    FilterLogic.filterResults(saveDbResult, netResults.await(), false)
                 showResult.addAll(filterResultLocal)
                 emit(filterResultLocal)
             }
@@ -56,7 +58,7 @@ class GetAllResultsUseCase(
 
 
 class GetNetResultUseCase(private val repository: Repository) {
-    suspend fun execute(page : Int) = withContext(backgroundThread) {
+    suspend fun execute(page: Int) = withContext(backgroundThread) {
         repository.getNetResults(page)
     }
 }
