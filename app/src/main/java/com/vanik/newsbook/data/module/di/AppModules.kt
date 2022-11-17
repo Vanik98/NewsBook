@@ -60,16 +60,8 @@ private val roomModule = module {
 
 private val retrofitModule = module {
     single {
-//        val client: OkHttpClient = OkHttpClient.Builder()
-//            .connectTimeout(Constants.CONNECTION_TIMEOUT, TimeUnit.SECONDS)
-//            .readTimeout(Constants.READ_TIMEOUT, TimeUnit.SECONDS)
-//            .writeTimeout(Constants.WRITE_TIMEOUT, TimeUnit.SECONDS)
-//            .retryOnConnectionFailure(false)
-//            .build()
-
         Retrofit.Builder()
             .baseUrl(Constants.BASE_URL)
-//            .client(client)
             .addConverterFactory(Json.asConverterFactory(Constants.CONVERT_FACTORY.toMediaType()))
             .build()
             .create(NewsApiService::class.java)
