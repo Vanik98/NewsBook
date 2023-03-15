@@ -4,6 +4,7 @@ package com.vanik.newsbook.data.module.di
 
 import androidx.room.Room
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
+import com.vanik.newsbook.data.module.exeption.ResultCallAdapterFactory
 import com.vanik.newsbook.data.module.net.NewsApiService
 import com.vanik.newsbook.data.module.repository.Repository
 import com.vanik.newsbook.data.module.room.AppDatabase
@@ -15,11 +16,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
-import okhttp3.OkHttpClient
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 import retrofit2.Retrofit
-import java.util.concurrent.TimeUnit
 
 
 val appModules by lazy {
@@ -50,7 +49,7 @@ private val useCaseModule = module {
 }
 
 private val repositoryModule = module {
-    single { Repository(Dispatchers.IO,get(), get()) }
+    single { Repository(Dispatchers.IO, get(), get()) }
 }
 
 private val roomModule = module {
@@ -63,9 +62,9 @@ private val retrofitModule = module {
         Retrofit.Builder()
             .baseUrl(Constants.BASE_URL)
             .addConverterFactory(Json.asConverterFactory(Constants.CONVERT_FACTORY.toMediaType()))
+            .addCallAdapterFactory(ResultCallAdapterFactory())
             .build()
             .create(NewsApiService::class.java)
     }
-    single { NewsApiService }
 }
 

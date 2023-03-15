@@ -1,31 +1,50 @@
 package com.vanik.newsbook.presentation.ui.base
 
-//noinspection SuspiciousImport
-
 import android.R
 import android.app.Dialog
-import android.content.Context
-import android.net.ConnectivityManager
-import android.net.NetworkInfo
+import android.os.Build
 import android.os.Bundle
+import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
-import okhttp3.Cache
-import okhttp3.OkHttpClient
-
+import androidx.lifecycle.lifecycleScope
+import com.vanik.newsbook.ConnectiveObserver
+import com.vanik.newsbook.NetworkConnectivityObserver
+import kotlinx.coroutines.launch
 
 abstract class BaseActivity : AppCompatActivity() {
 
     private lateinit var dialog: Dialog
+    private lateinit var connectiveObserver: NetworkConnectivityObserver
+    var status: ConnectiveObserver.Status = ConnectiveObserver.Status.UNAVAILABLE
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setUpBaseViews()
         setUpViews()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            internetCallback()
+        }
     }
 
     abstract fun setUpViews()
     private fun setUpBaseViews() {
         initializeDialog()
+    }
+
+    open fun isInternetConnected (state :ConnectiveObserver.Status){}
+
+    @RequiresApi(Build.VERSION_CODES.N)
+    private fun internetCallback() {
+        connectiveObserver = NetworkConnectivityObserver(this)
+        lifecycleScope.launch {
+            connectiveObserver.observe().collect {
+                status = it
+                isInternetConnected(it)
+                Toast.makeText(applicationContext, "internet connection is $it", Toast.LENGTH_SHORT).show()
+            }
+        }
+
     }
 
     private fun initializeDialog() {
@@ -40,16 +59,4 @@ abstract class BaseActivity : AppCompatActivity() {
     fun closeDialog() {
         dialog.dismiss()
     }
-
-
-    fun isInternetAvailable(): Boolean {
-        var isConnected: Boolean = false // Initial Value
-        val connectivityManager =
-            this.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val activeNetwork: NetworkInfo? = connectivityManager.activeNetworkInfo
-        if (activeNetwork != null && activeNetwork.isConnected)
-            isConnected = true
-        return isConnected
-    }
-
 }

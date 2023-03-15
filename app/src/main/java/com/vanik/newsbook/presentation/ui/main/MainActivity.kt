@@ -3,10 +3,12 @@ package com.vanik.newsbook.presentation.ui.main
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.vanik.newsbook.ConnectiveObserver
 import com.vanik.newsbook.R
 import com.vanik.newsbook.data.proxy.model.ResultLocal
 import com.vanik.newsbook.databinding.ActivityMainBinding
@@ -25,13 +27,21 @@ class MainActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        showDialog()
-        showNews()
+        if(status  == ConnectiveObserver.Status.UNAVAILABLE){
+            Toast.makeText(this,"no internet",Toast.LENGTH_SHORT).show()
+        }
     }
 
     override fun setUpViews() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         initializeAdapter()
+    }
+
+    override fun isInternetConnected(state: ConnectiveObserver.Status) {
+        if(state == ConnectiveObserver.Status.AVAILABLE) {
+            showDialog()
+            showNews()
+        }
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -84,7 +94,7 @@ class MainActivity : BaseActivity() {
                 val pastVisibleItems: Int
                 val visibleItemCount: Int
                 val totalItemCount: Int
-                if (isInternetAvailable()) {
+                if (status == ConnectiveObserver.Status.AVAILABLE) {
                     if (dy > 0) {
                         visibleItemCount = layoutManager.childCount
                         totalItemCount = layoutManager.itemCount

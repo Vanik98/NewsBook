@@ -2,11 +2,16 @@
 
 package com.vanik.newsbook.domain
 
+import android.util.Log
+import com.vanik.newsbook.data.module.exeption.ResponseState
 import com.vanik.newsbook.data.module.repository.Repository
 import com.vanik.newsbook.data.proxy.model.ResultLocal
+import com.vanik.newsbook.data.proxy.net.News
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.json.Json
 
 class GetAllResultsUseCase(
     private val getNetResults: GetNetResultUseCase,
@@ -31,7 +36,20 @@ class GetAllResultsUseCase(
 }
 
 class GetNetResultUseCase(private val repository: Repository) {
-    fun execute(page: Int) = repository.getNetResults(page)
+    private val responseState = MutableStateFlow<ResponseState>(ResponseState.START)
+    fun execute(page: Int) =  flow {
+
+        if(repository.getNetResults(page).isSuccessful){
+            val newsJson = repository.getNetResults(page).body().toString()
+            val json = Json { ignoreUnknownKeys = true }
+            val news: News = json.decodeFromString(newsJson)
+            emit(news.response?.results)
+            responseState.emit(ResponseState.SUCCESS(news))
+        }else{
+            responseState.emit(ResponseState.FAILURE(repository.getNetResults(page).message()))
+            Log.i("vanikTest","message ==== ${repository.getNetResults(page).message()}")
+        }
+    }
 }
 
 class GetFavoriteResultUseCase(private val repository: Repository) {
